@@ -6,6 +6,7 @@ namespace MyApp
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Start of the World!");
             int i = 0;
             while (i < 5)
             {
