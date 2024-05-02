@@ -12,7 +12,7 @@ namespace MyApp
                 Console.WriteLine("Hello World!");
                 ++i;
             }
-            
+            Console.WriteLine("End of the World!");
         }
     }
 }
