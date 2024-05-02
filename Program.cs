@@ -6,7 +6,13 @@ namespace MyApp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            int i = 0;
+            while (i < 5)
+            {
+                Console.WriteLine("Hello World!");
+                ++i;
+            }
+            
         }
     }
 }
