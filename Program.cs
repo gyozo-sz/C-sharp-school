@@ -1,71 +1,50 @@
 ﻿namespace MyApp
 {
-    class ConsoleManager
+    class Calculator
     { 
-        private int _lineNum;
-
-        public ConsoleManager(int lineNum)
-        {
-            _lineNum = lineNum - 1;
-        }
-
-        private void WriteToConsole(string str)
-        {
-            Console.Write(str);
-            ++_lineNum;
-        }
-
-        public string ReadStringFromConsole(string prompt)
-        {
-            string value;
-            WriteToConsole(prompt);
-            while (string.IsNullOrEmpty(value = Console.ReadLine()))
-            {
-                WriteToConsole("Please enter a value.\n");
-                WriteToConsole(prompt);
-            }
-            return value;
-        }
-
         public int ReadIntFromConsole(string prompt)
         {
             int value;
-            WriteToConsole(prompt);
+            Console.Write(prompt);
             while (!int.TryParse(Console.ReadLine(), out value))
             {
-                WriteToConsole("Please enter a valid number.\n");
-                WriteToConsole(prompt);
+                Console.WriteLine("Please enter a valid number.");
+                Console.Write(prompt);
             }
             return value;
         }
 
-        private bool IsEnteredPasswordValid(string password, int expectedLength)
+        public int ReadOperatorCodeFromConsole(string prompt)
         {
-            if ( password.Length == expectedLength && int.TryParse(password, out int value))
+            int operatorCode = -1;
+            while (true)
             {
-                return true;
+                operatorCode = ReadIntFromConsole(prompt);
+                if (!IsOperatorCodeValid(operatorCode))
+                {
+                    Console.WriteLine("Selected option is invalid. Please select a valid option.");
+                } else
+                {
+                    break;
+                }
             }
-
-            return false;
+            return operatorCode;
+            
         }
 
-        public string ReadPasswordFromConsole(string prompt, int length) {
-            string passwordPlaceholder = new string('*', length);
-            string promptWithPlaceholders = prompt + passwordPlaceholder;
+        private bool IsOperatorCodeValid(int operatorCode)
+        {
+            return operatorCode > 0 && operatorCode < 6;
+        }
 
-            WriteToConsole(promptWithPlaceholders);
-            Console.SetCursorPosition(prompt.Length, _lineNum);
-
-            string password = Console.ReadLine();
-            while (!IsEnteredPasswordValid(password, length))
-            {
-                WriteToConsole("Please enter a valid password.\n");
-                WriteToConsole(promptWithPlaceholders);
-                Console.SetCursorPosition(prompt.Length, _lineNum);
-                password = Console.ReadLine();
-            }
-
-            return password;
+        public void PrintActionMenu()
+        {
+            Console.WriteLine("Please select the operation you wish to perform:");
+            Console.WriteLine("1 - Addition");
+            Console.WriteLine("2 - Substraction");
+            Console.WriteLine("3 - Multiplication");
+            Console.WriteLine("4 - Division");
+            Console.WriteLine("5 - Exit");
         }
 
         public void ClearConsole()
@@ -73,37 +52,62 @@
             Console.Clear();
         }
 
-        public void PrettyPrintUserInfo(string name, int age, string email, string password)
+        public void PerformAction(int operatorCode, int argumentOne, int argumentTwo)
         {
-            Console.Write("User Information:\n");
-            Console.Write("******************************************************\n");
-            Console.Write($"\tName: {name}\n");
-            Console.Write($"\tAge: {age}\n");
-            Console.Write($"\tEmail: {email}\n");
-            Console.Write($"\tPassword: {password}\n");
-            Console.Write("******************************************************\n");
-            Console.Write($"Name length is {name.Length}\n");
+            switch (operatorCode)
+            {
+                case 1:
+                    Console.WriteLine($"The result of the addition is {argumentOne + argumentTwo}");
+                    break;
+                case 2:
+                    Console.WriteLine($"The result of the substraction is {argumentOne - argumentTwo}");
+                    break;
+                case 3:
+                    Console.WriteLine($"The result of the multiplication is {argumentOne * argumentTwo}");
+                    break;
+                case 4:
+                    if (argumentTwo == 0)
+                    {
+                        Console.WriteLine("Can not perform division by zero.");
+                        break;
+                    }
+                    double convertedArgOne = Convert.ToDouble(argumentOne);
+                    double convertedArgTwo = Convert.ToDouble(argumentTwo);
+                    Console.WriteLine($"The result of the division is {convertedArgOne / convertedArgTwo}");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+
+            }
+        }
+
+        public void Run()
+        {
+            PrintActionMenu();
+            int selectedOperatorCode = ReadOperatorCodeFromConsole("Enter your option: ");
+
+            if (selectedOperatorCode == 5) {
+                Console.WriteLine("Exiting calculator app.");
+                return;
+            }
+
+            ClearConsole();
+
+            int argumentOne = ReadIntFromConsole("Enter the first number: ");
+            int argumentTwo = ReadIntFromConsole("Enter the second number: ");
+
+            PerformAction(selectedOperatorCode, argumentOne, argumentTwo);
+            
         }
     }
 
     internal class Program
     {
-
-       
-        
         static void Main(string[] args)
         {
-            Console.Write("Please provide the following information:\n");
-            ConsoleManager cm = new ConsoleManager(1);
-
-            string name = cm.ReadStringFromConsole("Name: ");
-            int age = cm.ReadIntFromConsole("Age: ");
-            string email = cm.ReadStringFromConsole("Email: ");
-            string password = cm.ReadPasswordFromConsole("Password: ", 4);
-
-            cm.ClearConsole();
-
-            cm.PrettyPrintUserInfo(name, age, email, password);
+            Calculator c = new Calculator();
+            c.Run();
+            
 
         }
     }
