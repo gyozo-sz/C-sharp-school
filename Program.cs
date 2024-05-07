@@ -1,71 +1,60 @@
-﻿namespace MyApp
+﻿using System.Runtime.CompilerServices;
+
+namespace MyApp
 {
+    sealed class Worker
+    {
+        public int Rate;
+        public int TotalHour;
+
+        public Worker(int rate, int totalHour)
+        {
+            Rate = rate;
+            TotalHour = totalHour;
+        }
+
+        public double CalculateSalary()
+        {
+            return Rate * TotalHour * 1.5;
+        }
+    }
+
+    static class TopWorker
+    {
+        static public double CalculateSalaryWithBonus(this Worker worker)
+        {
+            if (worker.Rate < 50 && worker.TotalHour > 200)
+            {
+                return worker.Rate * worker.TotalHour * 2;
+            } else 
+            {
+                return worker.CalculateSalary();
+            } 
+        }
+
+        static public void CompareSalariesWithBonus(this Worker worker, string workerName)
+        {
+            Console.WriteLine($"{workerName}'s working info:");
+            Console.WriteLine($"\tRate: {worker.Rate}");
+            Console.WriteLine($"\tTotal Hours: {worker.TotalHour}");
+            Console.WriteLine($"Normal Salary: {worker.CalculateSalary()}");
+            Console.WriteLine($"Salary with Bonus: {worker.CalculateSalaryWithBonus()}");
+            Console.WriteLine("\n");
+        }
+    }
+
+    
+
     internal class Program
     {
-        static bool IsOddAndPositive(int num)
-        {
-            return num % 2 == 1 && num > 0;
-        }
-
-        static int FindMaxInMatrix(int[,] mtx)
-        {
-            return mtx.Cast<int>().Max();
-        }
-
-        static int FindConditionalMaxInMatrix(int[,] mtx, Predicate<int> condition)
-        {
-            return mtx.Cast<int>().Where(x => condition(x)).Max();
-        }
-
-        static int ConditionalCountELementsInMatrix(int[,] mtx, Predicate<int> condition)
-        {
-            return mtx.Cast<int>().Where(x => condition(x)).Count();
-        }
-
-        static void GenerateRandomMatrix(int minValue, int maxValue, int size, out int[,] mtx)
-        {
-            Random rnd = new Random();
-            mtx = new int[size,size];
-
-            for (int i = 0; i < size; ++i)
-            {
-                for (int j = 0; j < size; ++j)
-                {
-                    mtx[i, j] = rnd.Next(minValue, maxValue);
-                }
-            }
-        }
-
-        static void ConditionalPrintMultidimensionalArray(int[,] mtx, Predicate<int> condition) {
-            int c = 0;
-            foreach (int x in mtx)
-            {
-                if (condition(x))
-                {
-                    Console.Write($"{x}\t");
-
-                    c += 1;
-                    if (c % 5 == 0)
-                    {
-                        Console.Write('\n');
-                    }
-                }
-            }
-        }
 
         static void Main(string[] args)
         {
-            int minValue = -50;
-            int maxValue = 50;
-            int size = 8;
+            Worker worker1 = new(100, 250);
+            Worker worker2 = new(45, 250);
 
-            GenerateRandomMatrix(minValue, maxValue, size, out int[,] mtx);
-
-            ConditionalPrintMultidimensionalArray(mtx, IsOddAndPositive);
-
-            Console.WriteLine($"\nNumber of elements fulfilling the conditions: {ConditionalCountELementsInMatrix(mtx, IsOddAndPositive)}");
-            Console.WriteLine($"Maximum element of the restricted array: {FindConditionalMaxInMatrix(mtx, IsOddAndPositive)}");
-            Console.WriteLine($"Maximum element of the array: {FindMaxInMatrix(mtx)}");
+            worker1.CompareSalariesWithBonus("Worker 1");
+            worker2.CompareSalariesWithBonus("Worker 2");
         }
     }
 }
