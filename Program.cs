@@ -1,14 +1,18 @@
 ﻿namespace MyApp
 {
     class ConsoleManager
-    { 
+    {
+        private void WriteToConsole(string str)
+        {
+            Console.Write(str);
+        }
+
         public string ReadStringFromConsole(string prompt)
         {
             string value;
             do
             {
-
-                Console.Write(prompt);
+                WriteToConsole(prompt);
                 value = Console.ReadLine();
             }
             while(string.IsNullOrEmpty(value));
@@ -18,11 +22,11 @@
         public int ReadIntFromConsole(string prompt)
         {
             int value;
-            Console.Write(prompt);
+            WriteToConsole(prompt);
             while (!int.TryParse(Console.ReadLine(), out value))
             {
-                Console.Write("Please enter a valid number.\n");
-                Console.Write(prompt);
+                WriteToConsole("Please enter a valid number.\n");
+                WriteToConsole(prompt);
             }
             return value;
         }
@@ -36,14 +40,14 @@
             string passwordPlaceholder = new string('*', length);
             string promptWithPlaceholders = prompt + passwordPlaceholder;
 
-            Console.Write(promptWithPlaceholders);
+            WriteToConsole(promptWithPlaceholders);
             Console.SetCursorPosition(prompt.Length, Console.GetCursorPosition().Top);
 
             string password = Console.ReadLine();
             while (!IsEnteredPasswordValid(password, length))
             {
-                Console.Write("Please enter a valid password.\n");
-                Console.Write(promptWithPlaceholders);
+                WriteToConsole("Please enter a valid password.\n");
+                WriteToConsole(promptWithPlaceholders);
                 Console.SetCursorPosition(prompt.Length, Console.GetCursorPosition().Top);
                 password = Console.ReadLine();
             }
