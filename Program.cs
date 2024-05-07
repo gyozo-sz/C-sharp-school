@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MyApp
+﻿namespace MyApp
 {
     class User
     {
@@ -23,17 +21,18 @@ namespace MyApp
             Console.WriteLine($"\tAge: {_age}");
         }
 
-        public static void ChangeUserAge(ref User u, uint newAge)
+        public static void ChangeUserAge(User u, uint newAge)
         {
             u._age = newAge;
         }
     }
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             User u = new User("ID#001", "John Snow", 42);
-            User.ChangeUserAge(ref u, 24);
+            u.PrintInfo();
+            User.ChangeUserAge(u, 24);
             u.PrintInfo();
         }
     }
