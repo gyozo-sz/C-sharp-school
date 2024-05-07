@@ -2,6 +2,15 @@
 {
     class Calculator
     { 
+        private enum CalculatorOperation
+        {
+            Addition = 1, 
+            Subtraction = 2, 
+            Multiplication = 3, 
+            Division = 4, 
+            Exit = 5
+        }
+
         public int ReadIntFromConsole(string prompt)
         {
             int value;
@@ -14,7 +23,7 @@
             return value;
         }
 
-        public int ReadOperatorCodeFromConsole(string prompt)
+        private CalculatorOperation ReadOperatorCodeFromConsole(string prompt)
         {
             int operatorCode = -1;
             while (true)
@@ -28,7 +37,7 @@
                     break;
                 }
             }
-            return operatorCode;
+            return (CalculatorOperation)operatorCode;
             
         }
 
@@ -52,20 +61,20 @@
             Console.Clear();
         }
 
-        public void PerformAction(int operatorCode, int argumentOne, int argumentTwo)
+        private void PerformAction(CalculatorOperation operation, int argumentOne, int argumentTwo)
         {
-            switch (operatorCode)
+            switch (operation)
             {
-                case 1:
+                case CalculatorOperation.Addition:
                     Console.WriteLine($"The result of the addition is {argumentOne + argumentTwo}");
                     break;
-                case 2:
+                case CalculatorOperation.Subtraction:
                     Console.WriteLine($"The result of the substraction is {argumentOne - argumentTwo}");
                     break;
-                case 3:
+                case CalculatorOperation.Multiplication:
                     Console.WriteLine($"The result of the multiplication is {argumentOne * argumentTwo}");
                     break;
-                case 4:
+                case CalculatorOperation.Division:
                     if (argumentTwo == 0)
                     {
                         Console.WriteLine("Can not perform division by zero.");
@@ -81,23 +90,34 @@
             }
         }
 
+        private void WaitForUserInput()
+        {
+            Console.WriteLine("Press any key to return to the operation selection menu...");
+            Console.ReadKey();
+        }
+
         public void Run()
         {
-            PrintActionMenu();
-            int selectedOperatorCode = ReadOperatorCodeFromConsole("Enter your option: ");
+            while (true)
+            {
+                ClearConsole();
+                PrintActionMenu();
+                CalculatorOperation selectedOperatorCode = ReadOperatorCodeFromConsole("Enter your option: ");
 
-            if (selectedOperatorCode == 5) {
-                Console.WriteLine("Exiting calculator app.");
-                return;
+                if (selectedOperatorCode == CalculatorOperation.Exit)
+                {
+                    Console.WriteLine("Exiting calculator app.");
+                    return;
+                }
+
+                ClearConsole();
+
+                int argumentOne = ReadIntFromConsole("Enter the first number: ");
+                int argumentTwo = ReadIntFromConsole("Enter the second number: ");
+
+                PerformAction(selectedOperatorCode, argumentOne, argumentTwo);
+                WaitForUserInput();
             }
-
-            ClearConsole();
-
-            int argumentOne = ReadIntFromConsole("Enter the first number: ");
-            int argumentTwo = ReadIntFromConsole("Enter the second number: ");
-
-            PerformAction(selectedOperatorCode, argumentOne, argumentTwo);
-            
         }
     }
 
