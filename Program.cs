@@ -1,29 +1,21 @@
 ﻿namespace MyApp
 {
     class ConsoleManager
-    { 
-        private int _lineNum;
-
-        public ConsoleManager(int lineNum)
-        {
-            _lineNum = lineNum - 1;
-        }
-
+    {
         private void WriteToConsole(string str)
         {
             Console.Write(str);
-            ++_lineNum;
         }
 
         public string ReadStringFromConsole(string prompt)
         {
             string value;
-            WriteToConsole(prompt);
-            while (string.IsNullOrEmpty(value = Console.ReadLine()))
+            do
             {
-                WriteToConsole("Please enter a value.\n");
                 WriteToConsole(prompt);
+                value = Console.ReadLine();
             }
+            while(string.IsNullOrEmpty(value));
             return value;
         }
 
@@ -41,12 +33,7 @@
 
         private bool IsEnteredPasswordValid(string password, int expectedLength)
         {
-            if ( password.Length == expectedLength && int.TryParse(password, out int value))
-            {
-                return true;
-            }
-
-            return false;
+            return password.Length == expectedLength && int.TryParse(password, out _);
         }
 
         public string ReadPasswordFromConsole(string prompt, int length) {
@@ -54,14 +41,14 @@
             string promptWithPlaceholders = prompt + passwordPlaceholder;
 
             WriteToConsole(promptWithPlaceholders);
-            Console.SetCursorPosition(prompt.Length, _lineNum);
+            Console.SetCursorPosition(prompt.Length, Console.GetCursorPosition().Top);
 
             string password = Console.ReadLine();
             while (!IsEnteredPasswordValid(password, length))
             {
                 WriteToConsole("Please enter a valid password.\n");
                 WriteToConsole(promptWithPlaceholders);
-                Console.SetCursorPosition(prompt.Length, _lineNum);
+                Console.SetCursorPosition(prompt.Length, Console.GetCursorPosition().Top);
                 password = Console.ReadLine();
             }
 
@@ -88,13 +75,10 @@
 
     internal class Program
     {
-
-       
-        
         static void Main(string[] args)
         {
             Console.Write("Please provide the following information:\n");
-            ConsoleManager cm = new ConsoleManager(1);
+            ConsoleManager cm = new ConsoleManager();
 
             string name = cm.ReadStringFromConsole("Name: ");
             int age = cm.ReadIntFromConsole("Age: ");
@@ -104,7 +88,6 @@
             cm.ClearConsole();
 
             cm.PrettyPrintUserInfo(name, age, email, password);
-
         }
     }
 }
