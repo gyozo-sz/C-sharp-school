@@ -11,7 +11,7 @@
             Exit = 5
         }
 
-        public int ReadIntFromConsole(string prompt)
+        static public int ReadIntFromConsole(string prompt)
         {
             int value;
             Console.Write(prompt);
@@ -23,30 +23,27 @@
             return value;
         }
 
-        private CalculatorOperation ReadOperatorCodeFromConsole(string prompt)
+        static private CalculatorOperation ReadOperatorCodeFromConsole(string prompt)
         {
-            int operatorCode = -1;
             while (true)
             {
-                operatorCode = ReadIntFromConsole(prompt);
+                int operatorCode = ReadIntFromConsole(prompt);
                 if (!IsOperatorCodeValid(operatorCode))
                 {
                     Console.WriteLine("Selected option is invalid. Please select a valid option.");
                 } else
                 {
-                    break;
+                    return (CalculatorOperation)operatorCode;
                 }
             }
-            return (CalculatorOperation)operatorCode;
-            
         }
 
-        private bool IsOperatorCodeValid(int operatorCode)
+        static private bool IsOperatorCodeValid(int operatorCode)
         {
             return operatorCode > 0 && operatorCode < 6;
         }
 
-        public void PrintActionMenu()
+        static public void PrintActionMenu()
         {
             Console.WriteLine("Please select the operation you wish to perform:");
             Console.WriteLine("1 - Addition");
@@ -56,12 +53,12 @@
             Console.WriteLine("5 - Exit");
         }
 
-        public void ClearConsole()
+        static public void ClearConsole()
         {
             Console.Clear();
         }
 
-        private void PerformAction(CalculatorOperation operation, int argumentOne, int argumentTwo)
+        static private void PerformAction(CalculatorOperation operation, int argumentOne, int argumentTwo)
         {
             switch (operation)
             {
@@ -85,18 +82,18 @@
                     Console.WriteLine($"The result of the division is {convertedArgOne / convertedArgTwo}");
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(operation), "Invalid operation value is passed for execution");
 
             }
         }
 
-        private void WaitForUserInput()
+        static private void WaitForUserInput()
         {
             Console.WriteLine("Press any key to return to the operation selection menu...");
             Console.ReadKey();
         }
 
-        public void Run()
+        static public void Run()
         {
             while (true)
             {
@@ -123,10 +120,9 @@
 
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            Calculator c = new Calculator();
-            c.Run();
+            Calculator.Run();
             
 
         }
