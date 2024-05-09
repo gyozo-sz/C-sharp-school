@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.ConstrainedExecution;
-
-namespace MyApp
+﻿namespace MyApp
 {
     internal class Program
     {
@@ -61,7 +58,7 @@ namespace MyApp
             }
 
             Console.WriteLine("Rectangle as a Shape GetArea():");
-            Shape rectangleAsShape = rectangle as Shape;
+            var rectangleAsShape = rectangle as Shape;
             if (rectangleAsShape != null)
             {
                 rectangleAsShape.GetArea();
@@ -69,7 +66,7 @@ namespace MyApp
             
 
             Console.WriteLine("Shape as a Rectangle GetArea() (attempt):");
-            Rectangle shapeAsRectangle = shape as Rectangle;
+            var shapeAsRectangle = shape as Rectangle;
             if (shapeAsRectangle != null)
             {
                 shapeAsRectangle.GetArea();
@@ -79,6 +76,60 @@ namespace MyApp
                 Console.WriteLine("Shape cannot be used as a Rectangle.\n");
             }
 
+
+            Console.WriteLine("Object type casts:");
+            Object shapeObject = new Shape(20, 30);
+            Object rectangleObject = new Rectangle(30, 50);
+
+            Console.WriteLine("shapeObject is {0}a Shape", shapeObject is Shape ? "" : "NOT ");
+            Console.WriteLine("rectangleObject is {0}a Shape", rectangleObject is Shape ? "" : "NOT ");
+            Console.WriteLine("shapeObject is {0}a Rectangle", shapeObject is Rectangle ? "" : "NOT ");
+            Console.WriteLine("rectangleObject is {0}a Rectangle", rectangleObject is Rectangle ? "" : "NOT ");
+            Console.WriteLine("\n");
+
+
+            var shapeObjectAsShape = shapeObject as Shape;
+            if (shapeObjectAsShape == null)
+            {
+                Console.WriteLine("shapeObject can not be used as a Shape.");
+            } else
+            {
+                Console.Write("Calling Shape's GetArea() on shapeObject: ");
+                shapeObjectAsShape.GetArea();
+            }
+
+            var rectangleObjectAsShape = rectangleObject as Shape;
+            if (rectangleObjectAsShape == null)
+            {
+                Console.WriteLine("rectangleObject can not be used as a Shape.");
+            }
+            else
+            {
+                Console.Write("Calling Shape's GetArea() on rectangleObject: ");
+                rectangleObjectAsShape.GetArea();
+            }
+
+            var shapeObjectAsRectangle = shapeObject as Rectangle;
+            if (shapeObjectAsRectangle == null)
+            {
+                Console.WriteLine("shapeObject can not be used as a Shape.");
+            }
+            else
+            {
+                Console.Write("Calling Rectangle's GetArea() on shapeObject: ");
+                shapeObjectAsRectangle.GetArea();
+            }
+
+            var rectangleObjectAsRectangle = rectangleObject as Rectangle;
+            if (rectangleObjectAsRectangle == null)
+            {
+                Console.WriteLine("rectangleObject can not be used as a Shape.");
+            }
+            else
+            {
+                Console.Write("Calling Rectangle's GetArea() on rectangleObject: ");
+                rectangleObjectAsRectangle.GetArea();
+            }
         }
     }
 }
