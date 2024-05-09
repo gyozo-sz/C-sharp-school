@@ -1,53 +1,50 @@
-﻿using CoffeeMakingSteps;
-using CoffeeTypes;
+﻿using CoffeeTypes;
 
 namespace CoffeeRecipes
 {
-
-    class CoffeeRecipeList
+    public enum CoffeeMakingStep
     {
-        public List<ICoffeeRecipe> recipeList;
+        MakeExpresso = 0,
+        MakeFoamedMilk = 1,
+        MakeSteamedMilk = 2,
+        MakeHotWater = 3
     }
 
-    abstract class ICoffeeRecipe
+    public class CoffeeRecipe<CoffeeType>
+        where CoffeeType : Coffee, new()
     {
+        private CoffeeMakingStep[] _steps;
+        private uint _completedSteps;
 
-    }
-
-    class CoffeeRecipe<CoffeeType> : ICoffeeRecipe where CoffeeType : Coffee, new()
-    {
-        protected string _name;
-        protected CoffeeMakingStep[] _steps;
-
-        public string Name { get => _name; }
         public CoffeeMakingStep[] Steps { get => _steps; }
 
-        public CoffeeRecipe(string name, CoffeeMakingStep[] steps) {
-            _name = name;
+        public CoffeeRecipe(CoffeeMakingStep[] steps)
+        {
             _steps = steps;
+            _completedSteps = 0;
         }
 
-        public CoffeeType MakeCoffee()
+        public CoffeeType CreateCoffee()
         {
-            foreach (CoffeeMakingStep step in _steps)
-            {
-                step.Execute();
-            }
             return new CoffeeType();
         }
     }
 
-    class FlatWhiteRecipe : CoffeeRecipe<FlatWhite>
+    public static class CoffeeRecipeBook
     {
-        static readonly CoffeeMakingStep[] flatWhiteSteps = { new MakeExpressoStep(), new MakeSteamedMilkStep() };
+        public static CoffeeRecipe<Cappuccino> CappuccinoRecipe()
+        {
+            return new CoffeeRecipe<Cappuccino>(new CoffeeMakingStep[] { CoffeeMakingStep.MakeExpresso, CoffeeMakingStep.MakeSteamedMilk, CoffeeMakingStep.MakeFoamedMilk });
+        }
 
-        public FlatWhiteRecipe() : base("Flat White", flatWhiteSteps) { }
-    }
+        public static CoffeeRecipe<Americano> AmericanoRecipe()
+        {
+            return new CoffeeRecipe<Americano>(new CoffeeMakingStep[] { CoffeeMakingStep.MakeExpresso, CoffeeMakingStep.MakeHotWater });
+        }
 
-    class CappuccinoRecipe : CoffeeRecipe<Cappuccino> 
-    {
-        static readonly CoffeeMakingStep[] cappuccinoSteps = { new MakeExpressoStep(), new MakeSteamedMilkStep(), new MakeMilkFoamStep() };
-
-        public CappuccinoRecipe() : base("Cappuccino", cappuccinoSteps) { }
+        public static CoffeeRecipe<FlatWhite> FlatWhiteRecipe()
+        {
+            return new CoffeeRecipe<FlatWhite>(new CoffeeMakingStep[] { CoffeeMakingStep.MakeExpresso, CoffeeMakingStep.MakeSteamedMilk });
+        }
     }
 }

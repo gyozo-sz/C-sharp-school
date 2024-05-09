@@ -1,17 +1,26 @@
-﻿using CoffeeMakingSteps;
-using CoffeeRecipes;
+﻿using CoffeeRecipes;
 using CoffeeTypes;
 using MachineClass;
 
 namespace CoffeeMachineClass
 {
-    class CoffeeMachine : Machine
+    
+
+    class CoffeeMachineOperation : MachineOperation<CoffeeMakingStep>
     {
-        protected List<CoffeeRecipe<Coffee>> _recipes;
+        public CoffeeMachineOperation(CoffeeMakingStep operation, uint addedWear) : base(operation, addedWear) { }
+    }
+
+    class CoffeeMachine : Machine<CoffeeMakingStep>
+    {
+        protected List<CoffeeMachineOperation> _operations;
 
         public CoffeeMachine()
         {
-            _recipes = new List<CoffeeRecipe<Coffee>>();
+            _operations = new List<CoffeeMachineOperation> { 
+                new CoffeeMachineOperation(CoffeeMakingStep.MakeExpresso, 5),
+                new CoffeeMachineOperation(CoffeeMakingStep.MakeHotWater, 3) 
+            };
         }
 
         public override bool SelfClean()
@@ -23,27 +32,26 @@ namespace CoffeeMachineClass
             return true;
         }
 
-        public Coffee MakeCoffee(string recipeName)
+        public CoffeeType MakeCoffee<CoffeeType>(CoffeeRecipe<CoffeeType> recipe)
+            where CoffeeType : Coffee, new()
         {
             if (!Powered)
             {
                 throw new Exception("CoffeeMachine cannot be used without power.");
 
             }
-            foreach (CoffeeRecipe<Coffee> recipe in _recipes)
+            foreach (CoffeeMakingStep step in recipe.Steps)
             {
-                if (recipe.Name == recipeName)
+                if (_operations.FirstOrDefault(op => op.Operation == step) is CoffeeMachineOperation operation)
                 {
-                    foreach (CoffeeMakingStep coffeeMakingStep in recipe.Steps)
-                    {
-                        coffeeMakingStep.Execute();
-                        AddWear(coffeeMakingStep.AddedWear());
-                    }
-                    return recipe.MakeCoffee();
+                    PerformOperation(operation);
+                }else
+                {
+                    throw new Exception($"Unknown operation for CoffeeMachine: {step}");
                 }
-
             }
-            throw new Exception("No such coffee exists among the machine's recipes.");
+            return recipe.CreateCoffee();
+            
         }
     }
 
@@ -51,8 +59,12 @@ namespace CoffeeMachineClass
     {
         public PhilipsMachine()
         {
-            _recipes.Add(new FlatWhiteRecipe());
-            _recipes.Add(new CappuccinoRecipe());
+            _operations.Add(new CoffeeMachineOperation(CoffeeMakingStep.MakeFoamedMilk, 10) );
+            _operations.Add(new CoffeeMachineOperation(CoffeeMakingStep.MakeSteamedMilk, 8) );
         }
+    }
+    class BasicCoffeeMachine : CoffeeMachine
+    {
+        
     }
 }

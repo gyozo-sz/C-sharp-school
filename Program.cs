@@ -1,5 +1,7 @@
 ﻿using CoffeeMachineClass;
 using BarristaClass;
+using CoffeeTypes;
+using CoffeeRecipes;
 
 namespace MyApp
 {
@@ -14,18 +16,20 @@ namespace MyApp
 
             try
             {
-                peter.MakeCoffeeWithMachine(philipsMachine, "Cappuccino");
+                peter.MakeCoffeeWithMachine(philipsMachine, CoffeeRecipeBook.CappuccinoRecipe());
             } catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
 
             philipsMachine.TurnOn();
-            peter.MakeCoffeeWithMachine(philipsMachine, "Cappuccino");
+            Cappuccino c = peter.MakeCoffeeWithMachine(philipsMachine, CoffeeRecipeBook.CappuccinoRecipe());
+            c.Drink();
 
             Console.WriteLine("\nPhilips Coffee Machine current wear: {0}", philipsMachine.Wear);
 
-            caitlyn.MakeCoffeeWithMachine(philipsMachine, "Flat White");
+            FlatWhite fw = caitlyn.MakeCoffeeWithMachine(philipsMachine, CoffeeRecipeBook.FlatWhiteRecipe());
+            fw.Drink();
 
             Console.WriteLine("\nPhilips Coffee Machine current wear: {0}", philipsMachine.Wear);
 
@@ -38,6 +42,17 @@ namespace MyApp
             philipsMachine.Clean();
 
             Console.WriteLine("\nPhilips Coffee Machine current wear: {0}", philipsMachine.Wear);
+
+            BasicCoffeeMachine basicMachine = new();
+            basicMachine.TurnOn();
+            try
+            {
+                FlatWhite fw2 = caitlyn.MakeCoffeeWithMachine(basicMachine, CoffeeRecipeBook.FlatWhiteRecipe());
+            } 
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
 
         }

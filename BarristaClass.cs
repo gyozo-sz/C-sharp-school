@@ -1,10 +1,6 @@
 ﻿using CoffeeMachineClass;
+using CoffeeRecipes;
 using CoffeeTypes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BarristaClass
 {
@@ -65,12 +61,15 @@ namespace BarristaClass
             _experiences.Add(new RecipeExperience(recipeName));
         }
 
-        public Coffee MakeCoffeeWithMachine(CoffeeMachine coffeeMachine, string recipeName)
+        public CoffeeType MakeCoffeeWithMachine<CoffeeType>(CoffeeMachine coffeeMachine, CoffeeRecipe<CoffeeType> coffeeRecipe)
+            where CoffeeType : Coffee, new()
         {
-            Coffee coffee = coffeeMachine.MakeCoffee(recipeName);
-            AddExperience(recipeName);
+            CoffeeType coffee = coffeeMachine.MakeCoffee(coffeeRecipe);
+            AddExperience(typeof(CoffeeType).Name);
 
             return coffee;
         }
     }
+
+    
 }

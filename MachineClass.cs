@@ -1,12 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MachineClass
+﻿namespace MachineClass
 {
-    abstract class Machine
+    public class MachineOperation<AvailableMachineOperation>
+        where AvailableMachineOperation : Enum
+    {
+        private readonly AvailableMachineOperation _operation;
+        private readonly uint _addedWear;
+
+        public MachineOperation(AvailableMachineOperation operation, uint addedWear)
+        {
+            _operation = operation;
+            _addedWear = addedWear;
+        }
+
+        public AvailableMachineOperation Operation { get => _operation; }
+        public uint AddedWear { get => _addedWear; }
+    }
+
+    abstract class Machine<AvailableMachineOperation>
+        where AvailableMachineOperation : Enum
     {
         private bool _powered = false;
 
@@ -29,9 +40,15 @@ namespace MachineClass
             _powered = false;
         }
 
-        public void AddWear(uint wear)
+        private void AddWear(uint wear)
         {
             _wear += wear;
+        }
+
+        protected void PerformOperation(MachineOperation<AvailableMachineOperation> operation)
+        {
+            Console.WriteLine($"Executing {Enum.GetName(typeof(AvailableMachineOperation), operation.Operation)}...");
+            AddWear(operation.AddedWear);
         }
 
         public bool Clean()
