@@ -11,7 +11,7 @@ namespace BarristaClass
 
         public string RecipeName
         {
-            get { return _recipeName; }
+            get => _recipeName;
         }
 
         public uint TimesPrepared { get { return _timesPrepared; } }

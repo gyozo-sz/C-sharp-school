@@ -21,14 +21,11 @@
     {
         private bool _powered = false;
 
-        public bool Powered
-        {
-            get { return _powered; }
-        }
+        public bool Powered { get => _powered }
 
         private uint _wear = 0;
 
-        public uint Wear { get { return _wear; } }
+        public uint Wear { get => _wear; }
 
         public void TurnOn()
         {
