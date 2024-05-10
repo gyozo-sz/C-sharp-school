@@ -14,7 +14,7 @@ namespace MyApp
             get
             {
                 string[] split_names = _name.Split(' ');
-                return split_names[split_names.Length - 1];
+                return split_names.Last();
             }
         }
         public uint Salary
@@ -84,11 +84,10 @@ namespace MyApp
             return Convert.ToUInt32(_employees.Sum(x => Convert.ToInt64(x.ToPay())));
         }
 
-        // Not exactly clear what the task expects from me but this is my implementation:
         // "Create the GetNameSalary() method that returns the employee's last name and the amount of his/her compensation including bonus."
-        public (string, uint) GetNameSalary(uint employeeIdx)
+        public (string, uint) GetNameSalary(Employee employee)
         {
-            return (_employees[employeeIdx].Name, _employees[employeeIdx].Salary);
+            return (employee.Name, employee.ToPay());
         }
     }
 
@@ -111,6 +110,15 @@ namespace MyApp
             {
                 EmployeePrintExtension.PrintEmployeeInfo(employee);
                 Console.WriteLine("\n");
+            }
+        }
+
+        static public void PrintEmployeesSalaries(Company company)
+        {
+            foreach (Employee employee in company.Employees)
+            {
+                (string name, uint payment) = company.GetNameSalary(employee);
+                Console.WriteLine("Employee: {0}, Payment: {1}", name, payment);
             }
         }
     }
@@ -136,10 +144,10 @@ namespace MyApp
 
             CompanyPrintExtension.PrintAllEmployeeInfo(company);
 
-            Console.WriteLine($"Total amount to pay: {company.TotalToPay()}");
+            Console.WriteLine($"Total amount to pay: {company.TotalToPay()}\n");
 
-            
-
+            Console.WriteLine($"Employees' salaries:\n");
+            CompanyPrintExtension.PrintEmployeesSalaries(company);
         }
     }
 }
