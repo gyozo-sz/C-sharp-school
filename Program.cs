@@ -69,12 +69,16 @@ namespace MyApp
         private string _currentErrorLog = "";
         private readonly Regex _errorRegex = new("error", RegexOptions.IgnoreCase);
         private readonly LogFileEnumerator _logEnumerator;
+        private int _errorCount;
+        private int _lineCount;
 
         public ErrorLogEnumerator(string filePath) {
             _logEnumerator = new(filePath);
         }
 
         public string Current => _currentErrorLog;
+        public int ErrorCount => _errorCount;
+        public int LineCount => _lineCount;
 
         object IEnumerator.Current { get => Current; }
 
@@ -87,6 +91,7 @@ namespace MyApp
 
             do
             {
+                _lineCount++;
                 if(_logEnumerator.MoveNext())
                 {
                     _currentErrorLog = _logEnumerator.Current;
@@ -96,6 +101,7 @@ namespace MyApp
                     return false;
                 }
             } while (!_errorRegex.Match(_currentErrorLog).Success);
+            _errorCount++;
             return true;
         }
 
@@ -114,7 +120,11 @@ namespace MyApp
     class ErrorLogEnumerable : IEnumerable
     {
         private string _logFilePath;
-        public ErrorLogEnumerable(string filePath) => _logFilePath = filePath;
+        private ErrorLogEnumerator _logEnumerator;
+        public ErrorLogEnumerable(string filePath) {
+            _logEnumerator = new(filePath);
+
+        }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -123,7 +133,12 @@ namespace MyApp
 
         public ErrorLogEnumerator GetEnumerator()
         {
-            return new ErrorLogEnumerator(_logFilePath);
+            return _logEnumerator;
+        }
+
+        public double ErrorRatio()
+        {
+            return Convert.ToDouble(_logEnumerator.LineCount) / Convert.ToDouble(_logEnumerator.ErrorCount);
         }
     }
 
@@ -146,6 +161,46 @@ namespace MyApp
         }
     }
 
+    class CriticalErrorException : Exception
+    {
+        public CriticalErrorException(string errorMessage) : base(errorMessage) { }
+    }
+
+    class ErrorCounter
+    {
+        private ErrorLogEnumerable _errorLogEnumerator;
+        private string _outputFilePath;
+
+        public ErrorCounter(string logFilePath, string outputFilePath)
+        {
+            _errorLogEnumerator = new(logFilePath);
+            _outputFilePath = outputFilePath;
+        }
+
+        public double EnumerateErrors()
+        {
+            using StreamWriter outputFile = new(_outputFilePath);
+            foreach (string error in _errorLogEnumerator)
+            {
+                try
+                {
+                    outputFile.Write(error);
+                    if (error.Contains("CRITICAL ERROR"))
+                    {
+                        throw new CriticalErrorException(error);
+                    }
+                } catch (CriticalErrorException criticalError)
+                {
+                    Console.Write(criticalError.Message);
+                }
+                    
+            }
+
+            return _errorLogEnumerator.ErrorRatio();
+        }
+
+    }
+
     internal class Program
     {
         static void Main(string[] args)
@@ -153,17 +208,24 @@ namespace MyApp
             const string logFilePath = @"../../../yupdate.txt";
             const string outputFilePath = @"../../../errors.log";
 
-            ErrorLogEnumerable errorEnumerator = new(logFilePath);
-            using StreamWriter outputFile = new(outputFilePath);
-            foreach (string error in errorEnumerator)
+            try
             {
-                outputFile.Write(error);
-                if (error.Contains("CRITICAL ERROR"))
-                {
-                    Console.Write(error);
-                }
+                ErrorCounter errorCounter = new(logFilePath, outputFilePath);
+                double errorRatio = errorCounter.EnumerateErrors();
+                Console.WriteLine($"Error ratio in the log file: {errorRatio}");
+            } 
+            catch (IOException inputOutputException)
+            {
+                Console.WriteLine("File operation error: {0}", inputOutputException.Message);
             }
-
+            catch (DivideByZeroException)
+            {
+                Console.WriteLine($"There were no errors in the log file.");
+            }
+            finally
+            {
+                Console.WriteLine("Finished parsing the log file.");
+            }
 
         }
     }
