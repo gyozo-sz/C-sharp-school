@@ -19,6 +19,19 @@ namespace MyApp
             _lineReader = File.ReadLines(logFileName).GetEnumerator();
             _currentBuffer = "";
             _currentLogEntry = "";
+            InitializeEnumeration();
+        }
+
+        public void InitializeEnumeration()
+        {
+            // First MoveNext stops when the next line contains a valid log entry
+            //      but the enumerator might contain an invalid log entry
+            //      if the log starts with some meta info (e.g. "Log started at: <time>")
+            MoveNext();
+            if (!newLogEntryRegex.Match(_currentLogEntry).Success)
+            {
+                MoveNext();
+            }
         }
 
         public bool MoveNext()
