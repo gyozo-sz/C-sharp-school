@@ -36,6 +36,7 @@ namespace MyApp
                     Console.Write(criticalError.Message);
                 }
             }
+
             return _errorLogEnumerator.ErrorRatio();
         }
     }

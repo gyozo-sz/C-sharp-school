@@ -9,7 +9,7 @@ namespace MyApp
         private readonly Regex _errorRegex = new("error", RegexOptions.IgnoreCase);
         private readonly LogFileEnumerator _logEnumerator;
         private int _errorCount;
-        private int _lineCount;
+        private int _logCount;
 
         public ErrorLogEnumerator(string filePath)
         {
@@ -18,7 +18,7 @@ namespace MyApp
 
         public string Current => _currentErrorLog;
         public int ErrorCount => _errorCount;
-        public int LineCount => _lineCount;
+        public int LogCount => _logCount;
 
         object IEnumerator.Current { get => Current; }
 
@@ -31,7 +31,7 @@ namespace MyApp
 
             do
             {
-                _lineCount++;
+                _logCount++;
                 if (_logEnumerator.MoveNext())
                 {
                     _currentErrorLog = _logEnumerator.Current;
@@ -77,7 +77,11 @@ namespace MyApp
 
         public double ErrorRatio()
         {
-            return Convert.ToDouble(_logEnumerator.LineCount) / Convert.ToDouble(_logEnumerator.ErrorCount);
+            if (_logEnumerator.ErrorCount == 0)
+            {
+                throw new DivideByZeroException();
+            }
+            return Convert.ToDouble(_logEnumerator.LogCount) / Convert.ToDouble(_logEnumerator.ErrorCount);
         }
     }
 }

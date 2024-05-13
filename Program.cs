@@ -24,6 +24,10 @@ namespace MyApp
             {
                 Console.WriteLine($"There were no errors in the log file.");
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
             finally
             {
                 Console.WriteLine("Finished parsing the log file.");

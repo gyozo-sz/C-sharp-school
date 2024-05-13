@@ -1,0 +1,61 @@
+Log started at: 06.10.2016
+20:41:53 D:TCommandOptions::parseCommandLine(902):
+20:41:53 D:TCommandOptions::parseCommandLine(905): cmdline:  C:\Users\karpus\AppData\Local\Yandex\YandexBrowser\Application\16.9.1.1192\yupdate-exec.exe  --appid yabrowser --update-check --file "C:\Users\karpus\AppData\Local\Temp\yupdate-versioninfo-yabrowser.xml" --job {AC635BDA-F88A-4878-91BD-AE460E40031D}
+20:41:53 D:TCommandOptions::parseCommandLine(915): arg[ 1 ]:  --appid
+20:41:53 D:TCommandOptions::parseCommandLine(915): arg[ 3 ]:  --update-check
+20:41:53 D:TCommandOptions::parseCommandLine(915): arg[ 4 ]:  --file
+20:41:53 D:TCommandOptions::parseCommandLine(915): arg[ 6 ]:  --job
+20:41:53 D:TCommandOptions::parseCommandLine(950): JobId:  {AC635BDA-F88A-4878-91BD-AE460E40031D}
+20:41:53 D:TUuid::ReadUniqUserId(107): ui:  {A6A375EB-7E74-4304-B449-FE6E059F3688}
+20:41:53 D:v2upd(115): We are started from: C:\Users\karpus\AppData\Local\Yandex\YandexBrowser\Application\16.9.1.1192
+20:41:53 I:JustUtil::OutBanner(382): **********************************************************
+20:41:53 I:JustUtil::OutBanner(383): Version: 1.2.0.1831
+20:41:53 I:JustUtil::OutBanner(384): Path: C:\Users\karpus\AppData\Local\Yandex\YandexBrowser\Application\16.9.1.1192\yupdate-exec.exe
+20:41:53 I:JustUtil::OutBanner(385): OS: Microsoft Windows 8 Professional  (6.2, SP0)
+20:41:53 I:JustUtil::OutBanner(386): User: User
+20:41:53 I:JustUtil::OutBanner(387): Process: Non-elevated
+20:41:53 I:JustUtil::OutBanner(388): UAC: enable
+20:41:53 I:wWinMain(192): Arguments:  --appid yabrowser --update-check --file "C:\Users\karpus\AppData\Local\Temp\yupdate-versioninfo-yabrowser.xml" --job {AC635BDA-F88A-4878-91BD-AE460E40031D}
+20:41:53 I:wWinMain(193): UserName:  karpus
+20:41:53 I:wWinMain(194): LogonSID:  S-1-5-21-1382978192-292028616-2106900673-23325
+20:41:53 I:wWinMain(201): Try to work ;)
+20:41:53 D:CheckModeAndRun(758): BITS Initialized
+20:41:53 D:checkUpgradeInfo(314):
+20:41:53 D:DeleteTransferAndSayResult(266): JobId:  {AC635BDA-F88A-4878-91BD-AE460E40031D}
+20:41:53 D:TBitsTransferCompletion::TWorker::GetJobState(203): Job state code: 0x6 BG_JOB_STATE_TRANSFERRED
+20:41:53 D:TBitsTransferCompletion::TWorker::Filename(258): url:  https://api.browser.yandex.ru/update-info/browser/yandex/win-yandex.rss?custo=no&reason=dllyupdate&uid=A6A375EB-7E74-4304-B449-FE6E059F3688&version=16.9.1.1192
+20:41:53 D:TBitsTransferCompletion::TWorker::Finish(269):
+20:41:53 D:TBitsTransferCompletion::TWorker::GetJobState(203): Job state code: 0x6 BG_JOB_STATE_TRANSFERRED
+20:41:54 E:TBitsTransferCompletion::TWorker::Finish(275): HR= 0x0.
+20:41:54 D:DeleteTransferAndSayResult(279): Downloaded:  https://api.browser.yandex.ru/update-info/browser/yandex/win-yandex.rss?custo=no&reason=dllyupdate&uid=A6A375EB-7E74-4304-B449-FE6E059F3688&version=16.9.1.1192
+20:41:54 D:TExclusive::Lock(115): Yandex.Updater.InCheck.32.yabrowser
+20:41:54 D:TExclusive::Lock(126): Exclusive:  Yes
+20:41:54 D:checkUpgradeInfo(333): Try to analyse RSS...
+20:41:54 D:checkUpgradeInfo(339): <?xml  version="1.0" encoding="windows-1251"?>
+ <rss version="2.0" xmlns:update="http://storage.ape.yandex.net/get/browser/web_components/updatemodule" xmlns:version="http://storage.ape.yandex.net/get/browser/web_components/versionmodule">
+   <channel>
+     <title>Yandex</title>
+     <link>https://www.yandex.ru/</link>
+     <description>Yandex</description>
+     <managingEditor>support@browser.yandex.ru</managingEditor>
+     <item>
+       <title>Yandex</title>
+       <link>https://www.yandex.ru/</link>
+       <description>Yandex 16.9.1.1192</description>
+       <pubDate>Tue, 20 Sep 2016 15:52:38 UTC</pubDate>
+       <guid>http://download.cdn.yandex.net/browser/update/16_9_1_1192_1781_w_s_m/yandex.exe</guid>
+       <version:nick>yabrowser</version:nick>
+       <version:distsize>58382328</version:distsize>
+       <version:md5>f50d64052126080d5bfd1de822adba24</version:md5>
+       <version:distargs>--do-not-launch-browser --silent</version:distargs>
+       <version:platform>winnt</version:platform>
+       <version:version>16.9.1.1192</version:version>
+       <version:status>critical</version:status>
+       <version:uac_dlg>hide</version:uac_dlg>
+     </item>
+   </channel>
+ </rss>
+20:41:54 I:RssParser::IsUpgradeAvailable(420): Current version:  16.9.1.1192
+20:41:54 I:UpdateInfo::LogI(573): Found common version: 16.9.1.1192, critical
+20:41:54 I:RssParser::FindUpdate(381): Will use common update.
+20:41:54 D:RssParser::FindUpdate(391): Try to check ver: 16.9.1.1192
