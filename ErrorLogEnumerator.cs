@@ -32,15 +32,13 @@ namespace MyApp
             do
             {
                 _logCount++;
-                if (_logEnumerator.MoveNext())
-                {
-                    _currentErrorLog = _logEnumerator.Current;
-                }
-                else
+                if (!_logEnumerator.MoveNext())
                 {
                     return false;
                 }
-            } while (!_errorRegex.Match(_currentErrorLog).Success);
+
+            } while (!_errorRegex.Match(_logEnumerator.Current).Success);
+            _currentErrorLog = _logEnumerator.Current;
             _errorCount++;
             return true;
         }
